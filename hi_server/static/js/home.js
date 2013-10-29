@@ -23,35 +23,17 @@ function location_success(position){
 	var lon=position.coords.longitude;
 	var myLocation = new google.maps.LatLng(lat, lon);
 	var map = draw_map(map, myLocation);
-	map = add_marker(map, myLocation, 'Voce');
+	map = add_marker(map, myLocation, 'Voce', 0);
 	var positioning = $.post("/update/location",{
 		'lat':lat, 
-    	'lon':lon
-    });
-    positioning.done(function (data){
-    	$.each(data, function() {
-    		var location = new google.maps.LatLng(this['latitude'], this['longitude']);
-		    add_marker(map, location, this['name'])
+		'lon':lon
+	});
+	positioning.done(function (data){
+		$.each(data, function() {
+			var location = new google.maps.LatLng(this['latitude'], this['longitude']);
+			add_marker(map, location, this['name'], this['id'])
 		});
-    })
-}
-
-function update_location(lat, lon){
-	$.ajax({
-    type: "POST",
-    url: "/update/location",
-    data: {
-    	'lat':lat, 
-    	'lon':lon
-    },
-    dataType: 'json',
-    success: function(data){ 
-    	$.each(data, function() {
-    		var location = new google.maps.LatLng(this['latitude'], this['longitude']);
-		    add_marker(map, location, this['name'])
-		});
-    }
-});
+	})
 }
 
 
@@ -64,10 +46,18 @@ function draw_map(map, myLocation){
 	return map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
 }
 
-function add_marker(map, myLocation, title){
+function add_marker(map, myLocation, title, id){
 	var marker = new google.maps.Marker({
 		position: myLocation,
 		map: map,
 		title: title
+	});
+	marker.set("id", id);
+	google.maps.event.addListener(marker, "click", function() {
+		var user_id = marker.get('id');
+		if (user_id == 0)
+			alert('Este é você')
+		else
+		window.location = 'user/'+user_id
 	});
 }

@@ -32,4 +32,4 @@ class User(Base):
         return {'user' : {'id' : self.id, 'name' : self.name, 'email': self.email, 'description' : self.description}}
 
     def simple_information_to_json(self):
-        return { 'name': self.name, 'latitude' : self.latitude, 'longitude' : self.longitude }
+        return { 'id' : self.id, 'name': self.name, 'latitude' : self.latitude, 'longitude' : self.longitude }

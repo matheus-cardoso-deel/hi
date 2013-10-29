@@ -36,29 +36,41 @@ def register():
 	form = RegisterForm(request.form)
 	if request.method == 'GET':
 		return render_template('register.html', form=form)
-	else:
+	elif form.validate():
 		c = User(form.name.data, form.email.data, md5.new(form.password.data).hexdigest(), form.description.data)
 		db_session.add(c)
 		db_session.commit()
 		return redirect(url_for('login'))
+	return render_template('register.html', form=form)
 
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-	if 'user_session'in session:
-		if request.method == 'GET':
-			return render_template('home.html', **User.query.get(session['user_session']).to_json())
-		else:
-			return render_template('404.html')
+	if request.method == 'GET':
+		return render_template('home.html', **User.query.get(session['user_session']).to_json())
 	else:
-		return redirect(url_for('login'))
+		return render_template('404.html')
+
+@app.route("/show", methods=['GET', 'POST'])
+def show_self():
+	if request.method == 'GET':
+		return render_template('show.html', **User.query.get(session['user_session']).to_json())
+	else:
+		print request.form['name']
+		user = User.query.get(session['user_session'])
+		user.name = request.form['name']
+		user.email = request.form['email']
+		user.description = request.form['description']
+		db_session.commit()
+		return render_template('show.html', **User.query.get(session['user_session']).to_json())
+
 
 @app.route("/user/<id>", methods=['GET', 'POST'])
-def show_or_update():
+def show_user(id):
 	if request.method == 'GET':
 		user = User.query.get(id)
-		return render_template('show.html', user=user)
+		return render_template('show.html', **user.to_json())
 	else:
-		return edit(request.form, id)
+		return redirect(url_for('home'))
 
 @app.route("/update/location", methods=['GET', 'POST'])
 def update_location():
@@ -105,11 +117,16 @@ def get_near_users(lat, lon):
 
 @app.before_request
 def is_logged_in():
-	if request.path == '/index' or request.path == '/login' or request.path == '/register':
-		pass
-	else:
-		if not 'user_session' in session:
+	if not 'user_session' in session:
+		if not request.path in urls_allowed_without_auth:
 			return redirect(url_for('login'))
+	elif request.path in urls_blocked_with_auth:
+			return redirect(url_for('home'))
+
+
+
+urls_allowed_without_auth = ('/index', '/register', '/login')
+urls_blocked_with_auth = ('/register', '/login')
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 

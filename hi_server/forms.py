@@ -3,9 +3,9 @@
 from wtforms import Form, TextAreaField, TextField, PasswordField, validators
 
 class RegisterForm(Form):
-    name = TextField('Nome', [validators.Length(min=4, max=25)])
-    email = TextField('Email', [validators.Length(min=6, max=35)])
-    description = TextAreaField('Descricao')
+    name = TextField('Nome', [validators.required(), validators.Length(min=4, max=25)])
+    email = TextField('Email', [validators.required(), validators.Length(min=6, max=35)])
+    description = TextAreaField('Descricao', [validators.required()])
     password = PasswordField('Senha', [
         validators.Required(),
         validators.EqualTo('confirm', message='Senhas')

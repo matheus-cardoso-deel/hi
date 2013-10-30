@@ -3,6 +3,8 @@ from hi_server.database.db_config import db_session
 from hi_server import app
 from hi_server.forms import RegisterForm
 from hi_server.models.user import User
+from hi_server.models.profileRequest import ProfileRequest
+from hi_server.views.full_profile_request_view import has_full_profile_request, full_profile_request_accepted
 import md5
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -19,7 +21,17 @@ def register():
 def show_user(id):
 	if request.method == 'GET':
 		user = User.query.get(id)
-		return render_template('show.html', **user.to_json())
+		full_profile_request = has_full_profile_request(id)
+		has_request = False
+		if full_profile_request != None:
+			has_request = True
+			if full_profile_request_accepted(full_profile_request):
+				user_information = user.complex_information_to_json()
+		else:
+			user_information = user.simple_information_to_json()
+		user_information['has_request'] = has_request
+		return render_template('user_information.html', user_information=user_information, **User.query.get(session['user_session']).to_json())
+
 	else:
 		return redirect(url_for('home'))
 

@@ -23,7 +23,11 @@ function location_success(position){
 	var lon=position.coords.longitude;
 	var myLocation = new google.maps.LatLng(lat, lon);
 	var map = draw_map(map, myLocation);
-	map = add_marker(map, myLocation, 'Voce', 0);
+	var marker = new google.maps.Marker({
+		position: myLocation,
+		map: map,
+		title: 'Você'
+	});
 	var positioning = $.post("/update/location",{
 		'lat':lat, 
 		'lon':lon

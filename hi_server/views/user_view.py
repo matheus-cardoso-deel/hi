@@ -8,10 +8,8 @@ import md5
 @app.route("/register", methods=['GET', 'POST'])
 def register():
 	form = RegisterForm(request.form)
-	if request.method == 'GET':
-		return render_template('register.html', form=form)
-	elif form.validate():
-		c = User(form.name.data, form.email.data, md5.new(form.password.data).hexdigest(), form.description.data)
+	if request.method == 'POST' and form.validate():
+		c = User(form.name.data, form.username.data, form.email.data, md5.new(form.password.data).hexdigest(), form.description.data)
 		db_session.add(c)
 		db_session.commit()
 		return redirect(url_for('login'))
@@ -40,16 +38,14 @@ def update_location():
 
 @app.route("/show", methods=['GET', 'POST'])
 def show_self():
-	if request.method == 'GET':
-		return render_template('show.html', **User.query.get(session['user_session']).to_json())
-	else:
+	if request.method == 'POST':
 		print request.form['name']
 		user = User.query.get(session['user_session'])
 		user.name = request.form['name']
 		user.email = request.form['email']
 		user.description = request.form['description']
 		db_session.commit()
-		return render_template('show.html', **User.query.get(session['user_session']).to_json())
+	return render_template('show.html', **User.query.get(session['user_session']).to_json())
 
 
 def get_near_users(lat, lon):

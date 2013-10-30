@@ -20,7 +20,7 @@ def login():
 	if request.method == 'GET':
 		return render_template('login.html', form=form)
 	else:
-		user = User.query.filter_by(email=form.email.data, password=md5.new(form.password.data).hexdigest()).first()
+		user = User.query.filter_by(username=form.username.data, password=md5.new(form.password.data).hexdigest()).first()
 		if user != None:
 			session['user_session'] = user.get_id()
 			return redirect(url_for('home'))

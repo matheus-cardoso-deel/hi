@@ -4,8 +4,8 @@ from database.database import Base
 class ProfileRequest(Base):
     __tablename__ = 'profileRequest'
     id = Column(Integer, primary_key=True)
-    sender = Column(Integer, unique=False)
-    reciver = Column(Integer, unique=False)
+    sender = Column(Integer, db.ForeignKey('user.id'))
+    reciver = Column(Integer, db.ForeignKey('user.id'))
     date = Column(Integer, unique=False)
     accepted = Column(Integer, unique=False)
 

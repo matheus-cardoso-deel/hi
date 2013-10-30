@@ -1,6 +1,7 @@
-$('#request_button').onclick = function full_profile_request(id){
+function request_full_profile(id){
 	var profile_request = $.post("/fullProfileRequest/"+id);
 	profile_request.done(function (data){
-		alert(data);
+		if (data == 'success')
+			window.location = '/home'
 	})
 }

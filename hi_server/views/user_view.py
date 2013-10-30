@@ -27,6 +27,8 @@ def show_user(id):
 			has_request = True
 			if full_profile_request_accepted(full_profile_request):
 				user_information = user.complex_information_to_json()
+			else:
+				user_information = user.simple_information_to_json()
 		else:
 			user_information = user.simple_information_to_json()
 		user_information['has_request'] = has_request

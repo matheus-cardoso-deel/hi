@@ -10,9 +10,13 @@ import md5
 @app.route("/fullProfileRequest/<id>", methods=['GET', 'POST'])
 def create_full_profile_request(id):
 	if request.method == 'POST':
-		if has_full_profile_request(id) == None:
-			full_profile_request = ProfileRequest(session['user_session'], id, datetime.now(), 0)
-	return 'success'
+		if int(id) != session['user_session']:
+			if has_full_profile_request(id) == None:
+				full_profile_request = ProfileRequest(session['user_session'], id, datetime.now(), 0)
+				db_session.add(full_profile_request)
+				db_session.commit()
+				return 'success'
+	return 'fail'
 
 def has_full_profile_request(id):
 	full_profile_request = db_session.query(ProfileRequest).filter(

@@ -9,9 +9,8 @@ class ProfileRequest(Base):
     date = Column(DateTime, unique=False)
     accepted = Column(Integer, unique=False)
 
-    def __init__(self, name=None, sender=None, reciver=None, database=None, accepted=None):
-        self.name = name
+    def __init__(self, sender=None, reciver=None, date=None, accepted=None):
         self.sender = sender
         self.reciver = reciver
-        self.database = database
-        seld.accepted = accepted
+        self.date = date
+        self.accepted = accepted

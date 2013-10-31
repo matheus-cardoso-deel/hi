@@ -7,7 +7,7 @@ $(document).ready(function($){
 });
 function resize_map(){
 	var windowHeight = $(window).height();
-	$('body').css("height", windowHeight)
+	$('.body').css("height", windowHeight)
 }
 
 function get_location(){

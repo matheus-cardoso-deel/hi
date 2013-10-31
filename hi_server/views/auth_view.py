@@ -33,7 +33,7 @@ def logout():
 	return redirect(url_for('index'))
 
 
-urls_allowed_without_auth = ('/', '/index', '/register', '/login')
+urls_allowed_without_auth = ('/', '/index', '/register', '/login', '/static')
 urls_blocked_with_auth = ('/register', '/login')
 
 app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

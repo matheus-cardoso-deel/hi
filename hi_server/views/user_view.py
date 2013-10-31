@@ -68,6 +68,7 @@ def get_near_users(lat, lon):
 	max_lon = float(lon)+0.002
 	min_lon = float(lon)-0.002
 	users = db_session.query(User).filter(
+		User.id!=session['user_session'],
 		User.latitude<=max_lat, 
 		User.latitude>=min_lat, 
 		User.longitude<=max_lon, 

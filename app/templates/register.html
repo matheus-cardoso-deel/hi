@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Login
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block container %}
+	<div class="row">
+		<div id="msg" class="col-sm-6 col-sm-offset-3">
+			<h1>Registro</h1>
+		</div>
+		<form class="form-horizontal col-sm-6 col-sm-offset-3" role="form" method=post action="/register">
+			{% for field in form %}
+				<div class="form-group">
+					<div class="col-sm-2">
+						{{ field.label(class_="control-label") }}
+					</div>
+					<div class="col-sm-5">
+						{{ field(class_="form-control") }}
+					</div>
+				</div>
+			{% endfor %}
+			<button type="submit" class="btn btn-default">Enviar</button>
+		</form>
+		<div id="resultArea" class="col-sm-6 col-sm-offset-3" >
+			{% if answer %}
+			<input type="text" class="form-control" placeholder="Text input" value="{{ answer }}">
+			{% endif %}
+		</div>
+	</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}

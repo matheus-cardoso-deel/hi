@@ -1,13 +1,14 @@
-from flask import request, session, jsonify
-from hi_server.database.db_config import db_session
-from hi_server import app
-from hi_server.models.user import User
-from hi_server.models.profileRequest import ProfileRequest
-from sqlalchemy import or_, and_
-from datetime import datetime
 import md5
 
-@app.route("/fullProfileRequest/<id>", methods=['GET', 'POST'])
+from app import hi
+from app.database.db_config import db_session
+from app.models.profileRequest import ProfileRequest
+from app.models.user import User
+from datetime import datetime
+from flask import request, session, jsonify
+from sqlalchemy import or_, and_
+
+@hi.route("/fullProfileRequest/<id>", methods=['GET', 'POST'])
 def create_full_profile_request(id):
 	if request.method == 'POST':
 		if int(id) != session['user_session']:

@@ -2,7 +2,7 @@
 
 from flask import Flask
 
-app = Flask(__name__)
-app.debug = True
+hi = Flask(__name__)
+hi.debug = True
 
-from hi_server import views
+from app import views

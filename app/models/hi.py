@@ -3,6 +3,7 @@ from database.database import Base
 
 class Hi(Base):
     __tablename__ = 'hi'
+    
     id = Column(Integer, primary_key=True)
     sender = Column(Integer, db.ForeignKey('user.id'))
     reciver = Column(Integer, db.ForeignKey('user.id'))

@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, Float
-from hi_server.database.db_config import Base
+from app.database.db_config import Base
 
 class User(Base):
     __tablename__ = 'users'
+    
     id = Column(Integer, primary_key=True)
     name = Column(String(50), unique=False)
     username = Column(String(50), unique=True)

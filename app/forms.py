@@ -14,5 +14,5 @@ class RegisterForm(Form):
     confirm = PasswordField('Repita senha')
 
 class LoginForm(Form):
-    username = TextField('Usuario', [validators.Length(min=5, max=35)])
-    password = PasswordField('Senha', [validators.Required()])
+    username = TextField('Username', [validators.Length(min=5, max=35)])
+    password = PasswordField('Password', [validators.Required()])

@@ -1,13 +1,15 @@
-from flask import render_template, request, redirect, url_for, session, jsonify
-from hi_server.database.db_config import db_session
-from hi_server import app
-from hi_server.forms import RegisterForm
-from hi_server.models.user import User
-from hi_server.models.profileRequest import ProfileRequest
-from hi_server.views.full_profile_request_view import has_full_profile_request, full_profile_request_accepted
 import md5
 
-@app.route("/register", methods=['GET', 'POST'])
+from app import hi
+from app.database.db_config import db_session
+from app.forms import RegisterForm
+from app.models.profileRequest import ProfileRequest
+from app.models.user import User
+from app.views.full_profile_request_view import has_full_profile_request, full_profile_request_accepted
+from flask import render_template, request, redirect, url_for, session, jsonify
+
+
+@hi.route("/register", methods=['GET', 'POST'])
 def register():
 	form = RegisterForm(request.form)
 	if request.method == 'POST' and form.validate():
@@ -17,7 +19,7 @@ def register():
 		return redirect(url_for('login'))
 	return render_template('register.html', form=form)
 
-@app.route("/user/<id>", methods=['GET', 'POST'])
+@hi.route("/user/<id>", methods=['GET', 'POST'])
 def show_user(id):
 	if request.method == 'GET':
 		user = User.query.get(id)
@@ -37,7 +39,7 @@ def show_user(id):
 	else:
 		return redirect(url_for('home'))
 
-@app.route("/update/location", methods=['GET', 'POST'])
+@hi.route("/update/location", methods=['GET', 'POST'])
 def update_location():
 	if request.method == 'GET':
 		return redirect(url_for('home'))
@@ -50,7 +52,7 @@ def update_location():
 		print jsonify(near_users)
 		return jsonify(near_users)
 
-@app.route("/show", methods=['GET', 'POST'])
+@hi.route("/show", methods=['GET', 'POST'])
 def show_self():
 	if request.method == 'POST':
 		print request.form['name']

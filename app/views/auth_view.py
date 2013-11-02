@@ -1,20 +1,20 @@
-from flask import render_template, request, redirect, url_for, session
-from hi_server import app
-from hi_server.forms import LoginForm
-from hi_server.models.user import User
 import md5
 
+from app import hi
+from app.forms import LoginForm
+from app.models.user import User
+from flask import render_template, request, redirect, url_for, session
 
-@app.before_request
-def is_logged_in():
-	if not 'user_session' in session:
-		if not request.path in urls_allowed_without_auth:
-			return redirect(url_for('login'))
-	elif request.path in urls_blocked_with_auth:
-			return redirect(url_for('home'))
+# @hi.before_request
+# def is_logged_in():
+# 	if not 'user_session' in session:
+# 		if not request.path in urls_allowed_without_auth:
+# 			return redirect(url_for('login'))
+# 	elif request.path in urls_blocked_with_auth:
+# 			return redirect(url_for('home'))
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@hi.route("/login", methods=['GET', 'POST'])
 def login():
 	form = LoginForm(request.form)
 	if request.method == 'GET':
@@ -27,13 +27,13 @@ def login():
 		else:
 			return redirect(url_for('login'))
 
-@app.route("/logout")
+@hi.route("/logout")
 def logout():
 	session.pop('user_session', None)
 	return redirect(url_for('index'))
 
 
-urls_allowed_without_auth = ('/', '/index', '/register', '/login', '/static')
-urls_blocked_with_auth = ('/register', '/login')
+# urls_allowed_without_auth = ('/', '/index', '/register', '/login', '/static' ,'/static/', 'static')
+# urls_blocked_with_auth = ('/register', '/login')
 
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+hi.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

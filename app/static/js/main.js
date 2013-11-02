@@ -27,12 +27,12 @@
 
 function request_full_profile(id){
 	var profile_request = $.post("/fullProfileRequest/"+id);
+
 	profile_request.done(function (data){
 		if (data == 'success')
 			window.location = '/home'
 	})
 }
-
 
 function resize_map(){
 	var windowHeight = $(window).height();
@@ -76,7 +76,7 @@ function draw_map(map, myLocation){
 		zoom: 20,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
-	return map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
+	return map = new google.maps.Map(document.getElementById("container-map"),mapOptions);
 }
 
 function add_marker(map, myLocation, title, id){
@@ -85,13 +85,17 @@ function add_marker(map, myLocation, title, id){
 		map: map,
 		title: title
 	});
+	
 	marker.set("id", id);
+
 	google.maps.event.addListener(marker, "click", function() {
 		var user_id = marker.get('id');
-		if (user_id == 0)
-			alert('Este é você')
-		else
-		window.location = 'user/'+user_id
+
+		if (user_id == 0){
+			alert('Este é você');
+		} else{
+			window.location = 'user/'+user_id;
+		}
 	});
 }
 
@@ -101,13 +105,7 @@ function add_marker(map, myLocation, title, id){
 /* [GLOBAL] Calls 
 *******************************************************************/
 
-$(document).ready(function($){
-	resize_map();
-	get_location();
-	$(window).resize(function(){
-		resize_map();
-	});
-});
+
 
 /*  [LOCAL] Calls - <Model>
 *******************************************************************/

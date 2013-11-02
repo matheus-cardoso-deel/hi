@@ -1,8 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from hi_server.database.db_config import Base
+from app.database.db_config import Base
 
 class ProfileRequest(Base):
     __tablename__ = 'profile_requests'
+    
     id = Column(Integer, primary_key=True)
     sender = Column(Integer, unique=False)
     reciver = Column(Integer, unique=False)

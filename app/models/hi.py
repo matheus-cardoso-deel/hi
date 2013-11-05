@@ -9,8 +9,7 @@ class Hi(Base):
     reciver = Column(Integer, db.ForeignKey('user.id'))
     date = Column(Integer, unique=False)
 
-    def __init__(self, name=None, sender=None, reciver=None, database=None):
-        self.name = name
-        self.sender = sender
-        self.reciver = reciver
-        self.database = database
+    def __init__(self, *args, **kwargs):
+        self.sender = kwargs.get('sender', None)
+        self.reciver = kwargs.get('reciver', None)
+        self.date = kwargs.get('date', None)

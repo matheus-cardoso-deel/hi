@@ -13,7 +13,7 @@ from flask import render_template, request, redirect, url_for, session, jsonify
 def register():
 	form = RegisterForm(request.form)
 	if request.method == 'POST' and form.validate():
-		c = User(form.name.data, form.username.data, form.email.data, md5.new(form.password.data).hexdigest(), form.description.data)
+		c = User(name=form.name.data, username=form.username.data, email=form.email.data, password=md5.new(form.password.data).hexdigest(), description=form.description.data)
 		db_session.add(c)
 		db_session.commit()
 		return redirect(url_for('login'))
@@ -48,7 +48,7 @@ def update_location():
 		user.latitude = float(request.form['lat'])
 		user.longitude = float(request.form['lon'])
 		db_session.commit()
-		near_users = get_near_users(user.latitude, user.longitude)
+		near_users = user.get_near_users()
 		print jsonify(near_users)
 		return jsonify(near_users)
 
@@ -62,20 +62,3 @@ def show_self():
 		user.description = request.form['description']
 		db_session.commit()
 	return render_template('show.html', **User.query.get(session['user_session']).to_json())
-
-
-def get_near_users(lat, lon):
-	max_lat = float(lat)+0.002
-	min_lat = float(lat)-0.002
-	max_lon = float(lon)+0.002
-	min_lon = float(lon)-0.002
-	users = db_session.query(User).filter(
-		User.id!=session['user_session'],
-		User.latitude<=max_lat, 
-		User.latitude>=min_lat, 
-		User.longitude<=max_lon, 
-		User.longitude>=min_lon)
-	users_json = {}
-	for user in users:
-		users_json[user.id] = user.simple_information_to_json()	
-	return users_json

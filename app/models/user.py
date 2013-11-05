@@ -28,6 +28,22 @@ class User(Base):
     def __repr__(self):
         return self.name
 
+    def get_near_users(self):
+        max_lat = float(self.latitude)+0.002
+        min_lat = float(self.latitude)-0.002
+        max_lon = float(self.longitude)+0.002
+        min_lon = float(self.longitude)-0.002
+        users = db_session.query(User).filter(
+            User.id!=session['user_session'],
+            User.latitude<=max_lat, 
+            User.latitude>=min_lat, 
+            User.longitude<=max_lon, 
+            User.longitude>=min_lon)
+        users_json = {}
+        for user in users:
+            users_json[user.id] = user.simple_information_to_json() 
+        return users_json
+
     def get_id(self):
         return self.id
 

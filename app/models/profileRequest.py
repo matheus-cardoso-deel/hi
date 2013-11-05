@@ -10,8 +10,8 @@ class ProfileRequest(Base):
     date = Column(DateTime, unique=False)
     accepted = Column(Integer, unique=False)
 
-    def __init__(self, sender=None, reciver=None, date=None, accepted=None):
-        self.sender = sender
-        self.reciver = reciver
-        self.date = date
-        self.accepted = accepted
+    def __init__(self, *args, **kwargs):
+        self.sender = kwargs.get('sender', None)
+        self.reciver = kwargs.get('reciver', None)
+        self.date = kwargs.get('date', None)
+        self.accepted = kwargs.get('accepted', None)

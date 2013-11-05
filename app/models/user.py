@@ -16,14 +16,14 @@ class User(Base):
     def __str__():
     	return self.name
 
-    def __init__(self, name=None, username=None, email=None, password=None, description=None, latitude=None, longitude=None):
-        self.name = name
-        self.username = username
-        self.email = email
-        self.password = password
-        self.description = description
-        self.latitude = latitude
-        self.longitude = longitude
+    def __init__(self, *args, **kwargs):
+        self.name = kwargs.get('name', None)
+        self.username = kwargs.get('username', None)
+        self.email = kwargs.get('email', None)
+        self.password = kwargs.get('password', None)
+        self.description = kwargs.get('description', None)
+        self.latitude = kwargs.get('latitude', None)
+        self.longitude = kwargs.get('longitude', None)
 
     def __repr__(self):
         return self.name

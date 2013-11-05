@@ -13,7 +13,7 @@ def create_full_profile_request(id):
 	if request.method == 'POST':
 		if int(id) != session['user_session']:
 			if has_full_profile_request(id) == None:
-				full_profile_request = ProfileRequest(session['user_session'], id, datetime.now(), 0)
+				full_profile_request = ProfileRequest(sender=session['user_session'], reciver=id, date=datetime.now(), accepted=0)
 				db_session.add(full_profile_request)
 				db_session.commit()
 				return 'success'

@@ -64,7 +64,7 @@ function location_success(position){
 	positioning.done(function (data){
 		$.each(data, function() {
 			var location = new google.maps.LatLng(this['latitude'], this['longitude']);
-			add_marker(map, location, this['name'], this['id'])
+			add_marker(map, location, this['name'], this['id'], this['icon_url'])
 		});
 	})
 }
@@ -79,10 +79,11 @@ function draw_map(map, myLocation){
 	return map = new google.maps.Map(document.getElementById("container-map"),mapOptions);
 }
 
-function add_marker(map, myLocation, title, id){
+function add_marker(map, myLocation, title, id, icon_url){
 	var marker = new google.maps.Marker({
 		position: myLocation,
 		map: map,
+		icon: icon_url,
 		title: title
 	});
 	

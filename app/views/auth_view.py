@@ -34,7 +34,7 @@ def logout():
 	return redirect(url_for('index'))
 
 
-urls_allowed_without_auth = ('/', '/index', '/register', '/login', '/static' ,'/static/', 'static')
+urls_allowed_without_auth = ('/', '/index', '/register', '/login')
 urls_blocked_with_auth = ('/register', '/login')
 
 hi.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'

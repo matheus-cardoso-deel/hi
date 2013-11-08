@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from app.database.db_config import Base, db_session
 from sqlalchemy import or_, and_
+from flask import session
 
 class ProfileRequest(Base):
     __tablename__ = 'profile_requests'
@@ -21,11 +22,11 @@ class ProfileRequest(Base):
         full_profile_request = db_session.query(ProfileRequest).filter(
                     or_(
                             and_(
-                            ProfileRequest.sender == self.id,
+                            ProfileRequest.sender == session['user_session'],
                             ProfileRequest.reciver == id,), 
                             and_(
                             ProfileRequest.sender == id,
-                            ProfileRequest.reciver == self.id,)
+                            ProfileRequest.reciver == session['user_session'],)
                             )
                     ).first()
         self = full_profile_request
@@ -34,3 +35,10 @@ class ProfileRequest(Base):
         if self.accepted == 1:
             return True
         return False
+
+    def get_requests(self):
+        full_profile_requests = ProfileRequest.query.filter_by(
+            or_(sender=session['user_session'],
+                reciver=session['user_session']
+                ))
+        return full_profile_requests

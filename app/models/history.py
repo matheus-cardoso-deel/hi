@@ -10,5 +10,3 @@ class History(list):
 		full_profile_requests = full_profile_request.get_requests()
 		for request in full_profile_requests:
 			self.append(request)
-		
-

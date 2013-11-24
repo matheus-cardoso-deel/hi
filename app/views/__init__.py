@@ -1,3 +1,4 @@
 import application_view
 import auth_view
 import user_view
+import full_profile_request_view

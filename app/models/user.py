@@ -3,6 +3,7 @@ import os
 from sqlalchemy import Column, Integer, String, Float
 from app.database.db_config import Base, db_session
 from app.models.image_helper import resize_to_icon_size
+from app.models.profile_request import ProfileRequest
 
 class User(Base):
     __tablename__ = 'users'
@@ -32,6 +33,13 @@ class User(Base):
 
     def __repr__(self):
         return self.name
+
+    def get_profile_requests(self):
+        requests = db_session.query(ProfileRequest).filter(ProfileRequest.reciver == self.id)
+        requests_json = {}
+        for request in requests:
+            requests_json[request.id] = request.to_json() 
+        return requests_json
 
     def get_near_users(self):
         max_lat = float(self.latitude)+0.002

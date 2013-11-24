@@ -24,7 +24,7 @@
 					</a>
 				</li>
 				<li class="spinner-item">
-					<a href="javascript: void(0);" class="action" title="Histórico">
+					<a onclick="historic" href="#" class="action" title="Histórico">
 						Histórico
 					</a>
 				</li>				
@@ -112,7 +112,7 @@
 		$(document).ready(function($){
 			resize_map();
 			get_location();
-			
+			historic();
 			$(window).resize(function(){
 				resize_map();
 			});

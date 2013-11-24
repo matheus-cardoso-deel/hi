@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from app.database.db_config import Base, db_session
+from app.models.user import User
 from sqlalchemy import or_, and_
 from flask import session
 
@@ -26,13 +27,15 @@ class Event(Base):
 
 
     def to_json(self):
-        return {'id' : self.id, 
-                'sender' : self.sender, 
-                'reciver': self.reciver,
+        sender = User.query.get(self.sender)
+        return {'id' : self.id,
+                'sender' : self.sender,
+                'sender_name' : sender.name,
+                'reciver' : self.reciver,
                 'kind' : self.kind,
                 'option' : self.option,
                 'created_at' : self.created_at,
-                'updated_at' : updated_at}
+                'updated_at' : self.updated_at}
 
     def exists(self, id):
         full_profile_requests = db_session.query(Event).filter(

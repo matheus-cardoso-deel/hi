@@ -48,6 +48,16 @@ function get_location(){
 	}
 }
 
+function historic(){
+	console.log("getting historic ...")
+	var get_hitoric = $.get("/historic");
+	get_hitoric.done(function (data){
+		$.each(data, function() {
+			alert(this['sender_name'])
+		});
+	})
+}
+
 function location_success(position){
 	var lat=position.coords.latitude;
 	var lon=position.coords.longitude;

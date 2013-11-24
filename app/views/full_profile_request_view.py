@@ -29,11 +29,3 @@ def accept_full_profile_request(sender_id):
 		db_session.commit()
 		return "success"
 	return "fail"
-
-@hi.route("/events/seen", methods=['GET', 'POST'])
-def seen_all_events():
-	events = Event.query.filter_by(seen="false", reciver=session['user_session'])
-	if events:	
-		for event in events:
-			event.seen = "true"
-		db_session.commit()

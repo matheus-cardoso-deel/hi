@@ -1,5 +1,4 @@
-from hi_server import app
-
+from app import hi
 
 if __name__ == "__main__":
-	app.run()
+	hi.run()

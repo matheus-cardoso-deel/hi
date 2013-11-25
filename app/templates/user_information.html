@@ -1,6 +1,6 @@
-{% extends "base_fries.html" %}
+{% extends "base.html" %}
 {% block title %} Visualizar Perfil {% endblock %}
-{% block body %}
+{% block container %}
 <div class="form-horizontal col-sm-6 col-sm-offset-3" role="form">
 	<div class="form-group">
 		<label for="inputPassword1" class="col-lg-2 control-label">Nome</label>
@@ -34,5 +34,5 @@
 </div>
 {% endblock %}
 {% block js %}
-<script type=text/javascript src="{{ url_for('static', filename='js/user_information.js') }}"></script>
+<script type=text/javascript src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}

@@ -1,14 +1,139 @@
-{% extends "base_fries.html" %}
-{% block title %} Home {% endblock %}
-{% block css %}
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home.css') }}" media="screen" />
+{% extends "base.html" %}
+
+{% block title %}
+	Home
 {% endblock %}
-{% block body %}
-<div id="map-canvas" class="col-xs-12"></div>
+
+{% block header %}
+	<header class="action-bar row">
+		<a class="app-icon action">
+			<i class="icon-location-target"></i>
+		</a>
+		<h2 class="title">Hi <span class="subtitle">Meet new people.</span></h2>
+		<div class="form-spinner pull-right">
+			<a href="javascript: void(0);" class="toggle-spinner"><i class="icon-grid"></i></a>
+			<ul class="spinner">
+				<li class="spinner-item">
+					<a href="javascript: void(0);" class="action" title="Perfil" data-open-dialog="perfil-dialog">
+						Perfil
+					</a>
+				</li>
+				<li class="spinner-item">
+					<a href="javascript: void(0);" class="action" title="Desativar localização">
+						Desativar localização
+					</a>
+				</li>
+				<li class="spinner-item">
+					<a onclick="historic" href="#" class="action" title="Histórico">
+						Histórico
+					</a>
+				</li>				
+				<li class="spinner-item">
+					<a href="javascript: void(0);" class="action" title="Sair">
+						Sair
+					</a>
+				</li>
+			</ul>
+		</div>
+	</header>
 {% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block container %}
+	<div id="container-map"></div>
+
+	<div class="dialogs">
+		<div id="perfil" class="dialog row">
+			<header class="dialog-title-region">
+				<h1 class="title">Perfil</h1>
+			</header>
+			<div class="dialog-content">
+				CONTEÚDO
+			</div>
+			<ul class="dialog-actions">
+				<li><a href="javascript: void(0);" class="dialog-cancel-button">Cancelar</a></li>
+				<li><a href="javascript: void(0);" class="dialog-ok-button">Salvar</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="dialogs">
+      <div id="my-dialog" class="dialog" style="margin-left: 610px; margin-top: 115px;">
+        <header class="dialog-title-region">
+          <h1 class="title">Choose ringtone</h1>
+        </header>
+        <div class="dialog-content">
+          <ul class="list">
+            <li class="list-item-single-line">
+              <label>Default ringtone</label>
+              <label class="input-radio-wrapper pull-right">
+                <input type="radio" name="ringtone" class="input-radio" selected="">
+                <div class="input-radio-inner">
+                  <div class="input-radio-button"></div>
+                </div>
+              </label>
+            </li>
+            <li class="list-item-single-line">
+              <label>Silent</label>
+              <label class="input-radio-wrapper pull-right">
+                <input type="radio" name="ringtone" class="input-radio">
+                <div class="input-radio-inner">
+                  <div class="input-radio-button"></div>
+                </div>
+              </label>
+            </li>
+            <li class="list-item-single-line">
+              <label>Aldebaran</label>
+              <label class="input-radio-wrapper pull-right">
+                <input type="radio" name="ringtone" class="input-radio">
+                <div class="input-radio-inner">
+                  <div class="input-radio-button"></div>
+                </div>
+              </label>
+            </li>
+          </ul>
+        </div>
+        <ul class="dialog-actions">
+          <li><a href="javascript: void(0);" class="dialog-cancel-button">Cancel</a></li>
+          <li><a href="javascript: void(0);" class="dialog-ok-button">OK</a></li>
+        </ul>
+      </div>
+    </div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
 {% block js %}
-<script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?sensor=true">
-      </script>
-<script type=text/javascript src="{{ url_for('static', filename='js/home.js') }}"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=true"></script>
+	<script>
+		$(document).ready(function($){
+			resize_map();
+			get_location();
+			historic();
+			$(window).resize(function(){
+				resize_map();
+			});
+		});
+
+		var perfil_dialog = new fries.Dialog({
+			selector: '#perfil',
+			callbackOk: function(){
+				this.hide();
+			},
+			callbackCancel: function(){
+				this.hide();
+			}
+		});
+
+		$(document).on('click', 'a[data-open-dialog]', function(ev){
+			dialog = $(this).attr('data-open-dialog');
+			perfil_dialog.show();
+			// if (dialog == 'perfil_dialog'){
+			// 	perfil_dialog.show();
+			// }
+		});
+	</script>
 {% endblock %}

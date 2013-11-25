@@ -1,37 +1,31 @@
-from flask import request, session, jsonify
-from hi_server.database.db_config import db_session
-from hi_server import app
-from hi_server.models.user import User
-from hi_server.models.profileRequest import ProfileRequest
-from sqlalchemy import or_, and_
+from app import hi
+from app.database.db_config import db_session
+from app.models.event import Event
+from app.models.user import User
 from datetime import datetime
-import md5
+from flask import request, session, jsonify
 
-@app.route("/fullProfileRequest/<id>", methods=['GET', 'POST'])
+@hi.route("/full-profile-request/<id>", methods=['GET', 'POST'])
 def create_full_profile_request(id):
 	if request.method == 'POST':
 		if int(id) != session['user_session']:
-			if has_full_profile_request(id) == None:
-				full_profile_request = ProfileRequest(session['user_session'], id, datetime.now(), 0)
+			profile_request = Event()
+			if not profile_request.exists(id):
+				full_profile_request = Event(sender=session['user_session'], 
+											 reciver=id, 
+											 kind="full_profile_request", 
+											 option="sended",
+											 created_at=datetime.now())
 				db_session.add(full_profile_request)
 				db_session.commit()
 				return 'success'
-	return 'fail'
+	return 'badaccess'
 
-def has_full_profile_request(id):
-	full_profile_request = db_session.query(ProfileRequest).filter(
-                or_(
-                        and_(
-                        ProfileRequest.sender == session['user_session'],
-                        ProfileRequest.reciver == id,), 
-                        and_(
-                        ProfileRequest.sender == id,
-                        ProfileRequest.reciver == session['user_session'],)
-                        )
-                ).first()
-	return full_profile_request
-
-def full_profile_request_accepted(full_profile_request):
-	if full_profile_request.accepted == 1:
-		return True
-	return False
+@hi.route("/full-profile-request/<sender_id>/accept")
+def accept_full_profile_request(sender_id):
+	full_profile_request = Event.query.filter_by(sender=sender_id, reciver=session['user_session'])
+	if full_profile_request:
+		full_profile_request.option = "accepted"
+		db_session.commit()
+		return "success"
+	return "fail"

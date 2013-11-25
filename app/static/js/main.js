@@ -26,13 +26,14 @@
 *******************************************************************/
 
 function request_full_profile(id){
-	var profile_request = $.post("/fullProfileRequest/"+id);
+	var profile_request = $.post("/full-profile-request/"+id);
+
 	profile_request.done(function (data){
+		alert(data)
 		if (data == 'success')
 			window.location = '/home'
 	})
 }
-
 
 function resize_map(){
 	var windowHeight = $(window).height();
@@ -45,6 +46,16 @@ function get_location(){
 	} else {
 
 	}
+}
+
+function historic(){
+	console.log("getting historic ...")
+	var get_hitoric = $.get("/historic");
+	get_hitoric.done(function (data){
+		$.each(data, function() {
+			alert(this['sender_name'])
+		});
+	})
 }
 
 function location_success(position){
@@ -64,7 +75,7 @@ function location_success(position){
 	positioning.done(function (data){
 		$.each(data, function() {
 			var location = new google.maps.LatLng(this['latitude'], this['longitude']);
-			add_marker(map, location, this['name'], this['id'])
+			add_marker(map, location, this['name'], this['id'], this['icon_url'])
 		});
 	})
 }
@@ -76,22 +87,27 @@ function draw_map(map, myLocation){
 		zoom: 20,
 		mapTypeId: google.maps.MapTypeId.ROADMAP
 	};
-	return map = new google.maps.Map(document.getElementById("map-canvas"),mapOptions);
+	return map = new google.maps.Map(document.getElementById("container-map"),mapOptions);
 }
 
-function add_marker(map, myLocation, title, id){
+function add_marker(map, myLocation, title, id, icon_url){
 	var marker = new google.maps.Marker({
 		position: myLocation,
 		map: map,
+		icon: icon_url,
 		title: title
 	});
+	
 	marker.set("id", id);
+
 	google.maps.event.addListener(marker, "click", function() {
 		var user_id = marker.get('id');
-		if (user_id == 0)
-			alert('Este é você')
-		else
-		window.location = 'user/'+user_id
+
+		if (user_id == 0){
+			alert('Este é você');
+		} else{
+			window.location = 'user/'+user_id;
+		}
 	});
 }
 
@@ -101,13 +117,7 @@ function add_marker(map, myLocation, title, id){
 /* [GLOBAL] Calls 
 *******************************************************************/
 
-$(document).ready(function($){
-	resize_map();
-	get_location();
-	$(window).resize(function(){
-		resize_map();
-	});
-});
+
 
 /*  [LOCAL] Calls - <Model>
 *******************************************************************/

@@ -14,7 +14,7 @@
 
                 <title> Hi | {% block title %} {% endblock %} </title>
 
-                <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo/favicon.png">
+                <link rel="shortcut icon" href="{{ url_for('static', filename='img/logo/favicon.png') }}">
 
                 <!-- -  -   -    -     -      -      -       -        -        Fonts:default -->
                 <link href="{{ url_for('static', filename='css/font/open-sans.css') }}"                 rel="stylesheet" type="text/css">
@@ -48,9 +48,9 @@
                 <!-- -  -   -    -     -      -      -       -        -        Footer -->
                 {% block footer %} {% endblock %} 
                 
-                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js') }}"></script>
+                <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
                 <script>
-                        window.jQuery || document.write('<script src="{{ url_for('static', filename='js/vendor/jquery.min.js') }}"><\/script>')
+                    window.jQuery || document.write('<script src="{{ url_for('static', filename='js/vendor/jquery.min.js') }}"><\/script>')                    
                 </script>
 
                 <script src="{{ url_for('static', filename='js/vendor/foundation.min.js') }}"></script>

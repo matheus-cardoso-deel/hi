@@ -1,43 +1,73 @@
-from flask import render_template, request, redirect, url_for, session, jsonify
-from hi_server.database.db_config import db_session
-from hi_server import app
-from hi_server.forms import RegisterForm
-from hi_server.models.user import User
-from hi_server.models.profileRequest import ProfileRequest
-from hi_server.views.full_profile_request_view import has_full_profile_request, full_profile_request_accepted
 import md5
 
-@app.route("/register", methods=['GET', 'POST'])
+from app import hi
+from app.database.db_config import db_session
+from app.forms import RegisterForm
+from app.models.event import Event
+from app.models.user import User
+from app.models.image_helper import allowed_file
+from flask import render_template, request, redirect, url_for, session, jsonify, send_from_directory
+
+
+IMG_UPLOAD_FOLDER = 'app/uploads/users/images'
+ICON_UPLOAD_FOLDER = 'app/uploads/users/icons'
+
+@hi.route("/user/image/<path:filename>")
+def user_image(filename):
+	return send_from_directory("uploads/users/images", filename)
+
+@hi.route("/user/icon/<path:filename>")
+def user_icon(filename):
+	return send_from_directory("uploads/users/icons", filename)
+
+@hi.route("/user/history")
+def get_history():
+	user = User.query.get(session['user_session'])
+	profile_requests = user.get_profile_requests()
+	print profile_requests
+	if profile_requests:
+		print jsonify(profile_requests)
+		return jsonify(profile_requests)
+	return 'fail'
+
+@hi.route("/register", methods=['GET', 'POST'])
 def register():
 	form = RegisterForm(request.form)
-	if request.method == 'POST' and form.validate():
-		c = User(form.name.data, form.username.data, form.email.data, md5.new(form.password.data).hexdigest(), form.description.data)
-		db_session.add(c)
-		db_session.commit()
-		return redirect(url_for('login'))
+	if request.method == 'POST':
+		file = request.files[form.image.name].read()
+		if file and allowed_file(request.files[form.image.name].filename) and form.validate():
+			user = User(name=form.name.data,
+						username=form.username.data,
+						email=form.email.data,
+						password=md5.new(form.password.data).hexdigest(),
+						description=form.description.data)
+	        user.save_image(file)
+	        db_session.add(user)
+	        db_session.commit()
+	        print user.icon_url
+	        return redirect(url_for('login'))
 	return render_template('register.html', form=form)
 
-@app.route("/user/<id>", methods=['GET', 'POST'])
+@hi.route("/user/<id>", methods=['GET', 'POST'])
 def show_user(id):
 	if request.method == 'GET':
 		user = User.query.get(id)
-		full_profile_request = has_full_profile_request(id)
-		has_request = False
-		if full_profile_request != None:
-			has_request = True
-			if full_profile_request_accepted(full_profile_request):
+		full_profile_request = Event()
+		has_request = full_profile_request.exists(id)
+		if has_request:
+			has_request = 'true'
+			if full_profile_request.is_accepted():
 				user_information = user.complex_information_to_json()
 			else:
 				user_information = user.simple_information_to_json()
 		else:
 			user_information = user.simple_information_to_json()
 		user_information['has_request'] = has_request
-		return render_template('user_information.html', user_information=user_information, **User.query.get(session['user_session']).to_json())
-
+		return render_template('user_information.html', user_information=user_information)
 	else:
 		return redirect(url_for('home'))
 
-@app.route("/update/location", methods=['GET', 'POST'])
+@hi.route("/update/location", methods=['GET', 'POST'])
 def update_location():
 	if request.method == 'GET':
 		return redirect(url_for('home'))
@@ -46,11 +76,10 @@ def update_location():
 		user.latitude = float(request.form['lat'])
 		user.longitude = float(request.form['lon'])
 		db_session.commit()
-		near_users = get_near_users(user.latitude, user.longitude)
-		print jsonify(near_users)
+		near_users = user.get_near_users()
 		return jsonify(near_users)
 
-@app.route("/show", methods=['GET', 'POST'])
+@hi.route("/show", methods=['GET', 'POST'])
 def show_self():
 	if request.method == 'POST':
 		print request.form['name']
@@ -60,20 +89,3 @@ def show_self():
 		user.description = request.form['description']
 		db_session.commit()
 	return render_template('show.html', **User.query.get(session['user_session']).to_json())
-
-
-def get_near_users(lat, lon):
-	max_lat = float(lat)+0.002
-	min_lat = float(lat)-0.002
-	max_lon = float(lon)+0.002
-	min_lon = float(lon)-0.002
-	users = db_session.query(User).filter(
-		User.id!=session['user_session'],
-		User.latitude<=max_lat, 
-		User.latitude>=min_lat, 
-		User.longitude<=max_lon, 
-		User.longitude>=min_lon)
-	users_json = {}
-	for user in users:
-		users_json[user.id] = user.simple_information_to_json()	
-	return users_json

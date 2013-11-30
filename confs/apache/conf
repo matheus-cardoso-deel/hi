@@ -1,0 +1,20 @@
+<VirtualHost *:80>
+	ServerName hi2.ruicadete.com.br
+	ServerAlias *.hi2.ruicadete.com.br
+	ServerAdmin wendell@basecorp.com.br
+
+	DocumentRoot /var/www/hi2.ruicadete.com.br
+
+	<Directory /var/www/hi2.ruicadete.com.br>
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	Alias /static/ /var/www/hi2.ruicadete.com.br/static/
+	Alias /media/ /var/www/hi2.ruicadete.com.br/media/
+
+	ErrorLog /var/www/hi2.ruicadete.com.br/logs/apache.error.log
+	CustomLog /var/www/hi2.ruicadete.com.br/logs/apache.access.log combined
+
+	WSGIScriptAlias / /var/www/hi2.ruicadete.com.br/conf/mod_wsgi/dispach.wsgi
+</VirtualHost>

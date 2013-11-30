@@ -1,0 +1,16 @@
+<div class="row">
+	<label class="block-label">Registro</label>
+	<form id="form-register" class="form-flex inset" method="post" action="/accounts/create/" enctype="multipart/form-data" autocomplete="off">
+		<input class="input-text" placeholder="Nome de usuário" type="text">
+		<input class="input-text" placeholder="Senha" type="password">
+		<input class="input-text" placeholder="Senha novamente" type="password">
+		<div class="flex-group">
+			<input class="input-text flex1" placeholder="Nome" type="text">
+			<input class="input-text flex2" placeholder="Sobrenome" type="text">
+		</div>
+		<div class="form-actions">
+			<button class="btn btn-block" data-get="/mobile/logon/" data-target="#container">Voltar</button>
+			<button class="btn btn-block" data-post="#form-register">Enviar</button>
+		</div>
+	</form>
+</div>

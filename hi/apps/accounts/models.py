@@ -5,6 +5,7 @@
 import re
 
 from django.contrib.auth.models import (AbstractBaseUser, PermissionsMixin, BaseUserManager, UserManager)
+from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
 from django.core import validators
 from django.db import models
@@ -93,3 +94,65 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def email_user(self, subject, message, from_email=None): 
 
         send_mail(subject, message, from_email, [self.email])
+
+    @classmethod
+    def create_basic_user(self, username, password1, password2, email, first_name, last_name):
+        if password1 == password2:
+            password = password2
+        else:
+            return {'leftover' : {
+                    'alert-error' : 'Senhas não conferem.',
+                }
+            }   
+
+        try:
+            user = CustomUser.objects.create_user(
+                username=username,            
+                email=email,
+                password=password
+            )
+
+            user.first_name=first_name
+            user.last_name=last_name
+        except:
+                return {'leftover' : {
+                        'alert-error' : 'Usuário com este nome de usuário e/ou email já existe!',
+                    }
+                }
+
+        try:
+            user.save()
+        except:
+            return {'leftover' : {
+                    'alert-error' : 'Usuário não pôde ser salvo!',
+                }
+            }
+
+        return {'leftover' : {
+                'redirect' : '/accounts/logon/',
+            }
+        }
+
+    @classmethod
+    def logon(self, request, username, password):    
+        authenticated_user = authenticate(username=username, password=password)
+
+        if authenticated_user is not None:
+            if authenticated_user.is_active:
+                login(request, authenticated_user)
+
+                return {'leftover' : {
+                            'redirect' : '/mobile/home/',
+                            'target' : 'html',
+                        }
+                    }
+            else:
+                return {'leftover' : {
+                        'alert-error' : 'Esse usuário foi desativado.',
+                    }
+                }  
+        else:
+            return {'leftover' : {
+                    'alert-error' : 'Usuário inexistente.',
+                }
+            }   

@@ -1,0 +1,18 @@
+<div class="row">
+	<label class="block-label">Registro</label>
+	<form id="form-register" class="form-flex inset" method="post" action="/accounts/create/" enctype="multipart/form-data" autocomplete="off">
+		{% csrf_token %}
+		<input id="username" class="input-text" name="username" placeholder="Nome de usuário" type="text">
+		<input id="password1" class="input-text" name="password1" placeholder="Senha" type="password">
+		<input id="password2" class="input-text" name="password2" placeholder="Senha novamente" type="password">
+		<div class="flex-group">
+			<input id="first_name" class="input-text flex1" name="first_name" placeholder="Primeiro nome" type="text">
+			<input id="last_name" class="input-text flex2" name="last_name" placeholder="Sobrenome" type="text">
+		</div>
+		<input id="email" class="input-text" name="email" placeholder="Email" type="text">
+		<div class="form-actions">
+			<button class="btn btn-block" data-get="/accounts/logon/" data-target="#container">Voltar</button>
+			<button class="btn btn-block" data-post="#form-register">Enviar</button>
+		</div>
+	</form>
+</div>

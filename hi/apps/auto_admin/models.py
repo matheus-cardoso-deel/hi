@@ -16,8 +16,8 @@ def create_admin(app, created_models, verbosity, **kwargs):
 	username = 'admin'
 	password = 'admin'
 	email = 'admin@hi.com.br'
-	full_name = 'Administrador'
-	short_name = 'Administrador'
+	first_name = 'Administrador'
+	last_name = ''
 
 	try:
 		CustomUser.objects.get(username='admin')
@@ -31,8 +31,8 @@ def create_admin(app, created_models, verbosity, **kwargs):
 			username=username, 
 			password=password, 
 			email=email, 
-			full_name=full_name, 
-			short_name=short_name,
+			first_name=first_name, 
+			last_name=last_name,
 		)
 
 signals.post_syncdb.connect(create_admin, sender=auth_models, dispatch_uid='apps.auth.models.create_admin')

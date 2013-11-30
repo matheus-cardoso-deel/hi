@@ -1,639 +1,229 @@
-/*
- * jQuery FlexSlider v1.8
- * http://flex.madebymufffin.com
+/* alertify
+ * An unobtrusive customizable JavaScript notification system
  *
- * Copyright 2011, Tyler Smith
- * Free to use under the MIT license.
- * http://www.opensource.org/licenses/mit-license.php
+ * @author Fabien Doiron <fabien.doiron@gmail.com>
+ * @copyright Fabien Doiron 2013
+ * @license MIT <http://opensource.org/licenses/mit-license.php>
+ * @link http://fabien-d.github.com/alertify.js/
+ * @module alertify
+ * @version 0.3.11
  */
- 
-  /* Browser Resets */
-  .flex-container a:active,
-  .flexslider a:active {outline: none;}
-  .slides,
-  .flex-control-nav,
-  .flex-direction-nav {
-    margin: 0; 
-    padding: 0; 
-    list-style: 
-  } 
-
-  /* FlexSlider Necessary Styles
-  *********************************/ 
-  .flexslider {width: 100%; margin: 0; padding: 0;}
-  .flexslider .slides > li {display: none;} /* Hide the slides before the JS is loaded. Avoids image jumping */
-  .flexslider .slides img {max-width: 100%; display: block;}
-  .flex-pauseplay span {text-transform: capitalize;}
-
-  /* Clearfix for the .slides element */
-  .slides:after {content: "."; display: block; clear: both; visibility: hidden; line-height: 0; height: 0;} 
-  html[xmlns] .slides {display: block;} 
-  * html .slides {height: 1%;}
-
-  /* No JavaScript Fallback */
-  /* If you are not using another script, such as Modernizr, make sure you
-   * include js that eliminates this class on page load */
-  .no-js .slides > li:first-child {display: block;}
-
-
-  /* FlexSlider Default Theme
-  *********************************/
-  .flexslider {
-    position: relative;
-    zoom: 1;
+  .alertify,
+  .alertify-show,
+  .alertify-log {
+    -webkit-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+       -moz-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+        -ms-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+         -o-transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275);
+            transition: all 500ms cubic-bezier(0.175, 0.885, 0.320, 1.275); /* easeOutBack */
   }
-
-  .flexslider .slides {zoom: 1;}
-  .flexslider .slides > li {position: relative;}
-  /* Suggested container for "Slide" animation setups. Can replace this with your own, if you wish */
-  .flex-container {zoom: 1; position: relative;}
-
-  /* Caption style */
-  /* IE rgba() hack */
-  .flex-caption {background:none; -ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000);
-  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000); zoom: 1;}
-  .flex-caption {width: 96%; padding: 2%; position: absolute; left: 0; bottom: 0; background: rgba(0,0,0,.3); color: #fff; text-shadow: 0 -1px 0 rgba(0,0,0,.3); font-size: 14px; line-height: 18px;}
-
-  /* Direction Nav */
-  .flex-direction-nav li a {
-  /*  width: 52px; 
-    height: 52px; 
-    margin: -13px 0 0;
-    display: block;
-    background: url(theme/bg_direction_nav.png) no-repeat 0 0;
-    position: absolute;
-    top: 50%;
-    cursor: pointer; */
+  .alertify-hide {
+    -webkit-transition: all 250ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+       -moz-transition: all 250ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+        -ms-transition: all 250ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+         -o-transition: all 250ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+            transition: all 250ms cubic-bezier(0.600, -0.280, 0.735, 0.045); /* easeInBack */
   }
-  .flex-direction-nav li .next {
-  /*  margin: 0;
-    padding: 0;
-    right: 0;
-    position: absolute;
-    top: 105px;
-    background-color: #384343;
-    right: 0;
-    height: 222px;
-    width: 50px;
-    z-index: 100;
-
-    -webkit-transition: none;
-    -moz-transition: none;
-    -ms-transition: none;
-    -o-transition: none;
-    transition: none;*/
+  .alertify-log-hide {
+    -webkit-transition: all 500ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+       -moz-transition: all 500ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+        -ms-transition: all 500ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+         -o-transition: all 500ms cubic-bezier(0.600, -0.280, 0.735, 0.045);
+            transition: all 500ms cubic-bezier(0.600, -0.280, 0.735, 0.045); /* easeInBack */
   }
-  .flex-direction-nav li .prev {
-  /*  margin: 0;
-    padding: 0;
-    left: 0;
-    position: absolute;
-    top: 105px;
-    background-color: #384343;
-    right: 0;
-    height: 222px;
-    width: 50px;
-    z-index: 100;
-
-    -webkit-transition: none;
-    -moz-transition: none;
-    -ms-transition: none;
-    -o-transition: none;
-    transition: none;*/
+  .alertify-cover {
+    position: fixed; z-index: 99999;
+    top: 0; right: 0; bottom: 0; left: 0;
+    background-color:white;
+    filter:alpha(opacity=0);
+    opacity:0;
   }
-  .disabled {opacity: .3; filter:alpha(opacity=30); cursor: default;}
-
-  /* Control Nav */
-  .flex-control-nav {width: 100%; position: absolute; bottom: -30px; text-align: center;}
-  .flex-control-nav li {margin: 0 0 0 5px; display: inline-block; zoom: 1; *display: inline;}
-  .flex-control-nav li:first-child {margin: 0;}
-  .flex-control-nav li a {width: 13px; height: 13px; display: block; background: url(theme/bg_control_nav.png) no-repeat 0 0; cursor: pointer; text-indent: -9999px;}
-  .flex-control-nav li a:hover {background-position: 0 -13px;}
-  .flex-control-nav li a.active {background-position: 0 -26px; cursor: default;}
-
-/**
- * Handsontable 0.9.19
- * Handsontable is a simple jQuery plugin for editable tables with basic copy-paste compatibility with Excel and Google Docs
- *
- * Copyright 2012, Marcin Warpechowski
- * Licensed under the MIT license.
- * http://handsontable.com/
- *
- * Date: Tue Oct 01 2013 13:17:18 GMT+0200 (Central European Daylight Time)
- */
-
-  .handsontable {
-    position: relative;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.3em;
-    font-size: 13px;
+    .alertify-cover-hidden {
+      display: none;
+    }
+  .alertify {
+    position: fixed; z-index: 99999;
+    top: 50px; left: 50%;
+    width: 550px;
+    margin-left: -275px;
+    opacity: 1;
   }
-
-  .handsontable.htAutoColumnSize {
-    visibility: hidden;
-    left: 0;
-    position: absolute;
-    top: 0;
+    .alertify-hidden {
+      -webkit-transform: translate(0,-150px);
+         -moz-transform: translate(0,-150px);
+          -ms-transform: translate(0,-150px);
+           -o-transform: translate(0,-150px);
+              transform: translate(0,-150px);
+      opacity: 0;
+      display: none;
+    }
+    /* overwrite display: none; for everything except IE6-8 */
+    :root *> .alertify-hidden {
+      display: block;
+      visibility: hidden;
+    }
+  .alertify-logs {
+    position: fixed;
+    z-index: 5000;
+    bottom: 10px;
+    right: 10px;
+    width: 300px;
   }
-
-  .handsontable table,
-  .handsontable tbody,
-  .handsontable thead,
-  .handsontable td,
-  .handsontable th,
-  .handsontable div
-  {
-    box-sizing: content-box;
-    -webkit-box-sizing: content-box;
-    -moz-box-sizing: content-box;
-  }
-
-  .handsontable table.htCore {
-    border-collapse: separate; /*it must be separate, otherwise there are offset miscalculations in WebKit: http://stackoverflow.com/questions/2655987/border-collapse-differences-in-ff-and-webkit*/
-    position: relative;
-    /*this actually only changes appearance of user selection - does not make text unselectable
-    -webkit-user-select: none;
-    -khtml-user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-    -ms-user-select: none;
-    /*user-select: none; /*no browser supports unprefixed version*/
-    border-spacing: 0;
-    margin: 0;
-    border-width: 0;
-    table-layout: fixed;
-    width: 0;
-    outline-width: 0;
-    /* reset bootstrap table style. for more info see: https://github.com/warpech/jquery-handsontable/issues/224 */
-    max-width: none;
-    max-height: none;
-  }
-
-  .handsontable col {
-    width: 50px;
-  }
-
-  .handsontable col.rowHeader {
-    width: 50px;
-  }
-
-  .handsontable th,
-  .handsontable td {
-    border-right: 1px solid #CCC;
-    border-bottom: 1px solid #CCC;
-    height: 22px;
-    empty-cells: show;
-    line-height: 21px;
-    padding: 0 4px 0 4px; /* top, bottom padding different than 0 is handled poorly by FF with HTML5 doctype */
-    background-color: #FFF;
-    font-size: 12px;
-    vertical-align: top;
-    overflow: hidden;
-    outline-width: 0;
-    white-space: pre-line; /* preserve new line character in cell */
-  }
-
-  .handsontable td.htInvalid {
-    -webkit-transition: background 0.75s ease;
-    transition: background 0.75s ease;
-    background-color: #ff4c42;
-  }
-
-  .handsontable th:last-child {
-    /*Foundation framework fix*/
-    border-right: 1px solid #CCC;
-    border-bottom: 1px solid #CCC;
-  }
-
-  .handsontable tr:first-child th.htNoFrame,
-  .handsontable th:first-child.htNoFrame,
-  .handsontable th.htNoFrame {
-    border-left-width: 0;
-    background-color: white;
-    border-color: #FFF;
-  }
-
-  .handsontable th:first-child,
-  .handsontable td:first-child,
-  .handsontable .htNoFrame + th,
-  .handsontable .htNoFrame + td {
-    border-left: 1px solid #CCC;
-  }
-
-  .handsontable tr:first-child th,
-  .handsontable tr:first-child td {
-    border-top: 1px solid #CCC;
-  }
-
-  .handsontable thead tr:last-child th {
-    border-bottom-width: 0;
-  }
-
-  .handsontable thead tr.lastChild th {
-    border-bottom-width: 0;
-  }
-
-  .handsontable th {
-    background-color: #EEE;
-    color: #222;
-    text-align: center;
-    font-weight: normal;
-    white-space: nowrap;
-  }
-
-  .handsontable th .small {
-    font-size: 12px;
-  }
-
-  .handsontable thead th {
-    padding: 0;
-  }
-
-  .handsontable th.active {
-    background-color: #CCC;
-  }
-
-  .handsontable thead th .relative {
-    position: relative;
-    padding: 2px 4px;
-  }
-
-  /* plugins */
-
-  .handsontable .manualColumnMover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: transparent;
-    width: 20px;
-    height: 25px;
-    z-index: 999;
-    cursor: move;
-  }
-
-  .handsontable th .manualColumnMover:hover,
-  .handsontable th .manualColumnMover.active {
-    background-color: #88F;
-  }
-
-  .handsontable .manualColumnResizer {
-    position: absolute;
-    top: 0;
-    cursor: col-resize;
-  }
-
-  .handsontable .manualColumnResizerHandle {
-    background-color: transparent;
-    width: 5px;
-    height: 25px;
-  }
-
-  .handsontable .manualColumnResizer:hover .manualColumnResizerHandle,
-  .handsontable .manualColumnResizer.active .manualColumnResizerHandle {
-    background-color: #AAB;
-  }
-
-  .handsontable .manualColumnResizerLine {
-    position: absolute;
-    right: 0;
-    top: 0;
-    background-color: #AAB;
+  .alertify-logs-hidden {
     display: none;
-    width: 0;
-    border-right: 1px dashed #777;
   }
+    .alertify-log {
+      display: block;
+      margin-top: 10px;
+      position: relative;
+      right: -300px;
+      opacity: 0;
+    }
+    .alertify-log-show {
+      right: 0;
+      opacity: 1;
+    }
+    .alertify-log-hide {
+      -webkit-transform: translate(300px, 0);
+         -moz-transform: translate(300px, 0);
+          -ms-transform: translate(300px, 0);
+           -o-transform: translate(300px, 0);
+              transform: translate(300px, 0);
+      opacity: 0;
+    }
+    .alertify-dialog {
+      padding: 25px;
+    }
+      .alertify-resetFocus {
+        border: 0;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
+      .alertify-inner {
+        text-align: center;
+      }
+      .alertify-text {
+        margin-bottom: 15px;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+        font-size: 100%;
+      }
+      .alertify-buttons {
+      }
+        .alertify-button,
+        .alertify-button:hover,
+        .alertify-button:active,
+        .alertify-button:visited {
+          background: none;
+          text-decoration: none;
+          border: none;
+          /* line-height and font-size for input button */
+          line-height: 1.5;
+          font-size: 100%;
+          display: inline-block;
+          cursor: pointer;
+          margin-left: 5px;
+        }
 
-  .handsontable .manualColumnResizer.active .manualColumnResizerLine {
-    display: block;
-  }
-
-  .handsontable .columnSorting:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
-
-  /* border line */
-  .handsontable .wtBorder {
-    position: absolute;
-    font-size: 0;
-  }
-
-  .handsontable td.area {
-    background-color: #EEF4FF;
-  }
-
-  /* fill handle */
-  .handsontable .wtBorder.corner {
-    font-size: 0;
-    cursor: crosshair;
-  }
-
-  .handsontable .htBorder.htFillBorder {
-    background: red;
-    width: 1px;
-    height: 1px;
-  }
-
-  .handsontableInput {
-    border: 2px solid #5292F7;
-    outline-width: 0;
-    margin: 0;
-    padding: 1px 4px 0 2px;
-    font-family: Arial, Helvetica, sans-serif; /*repeat from .handsontable (inherit doesn't work with IE<8) */
-    line-height: 1.3em; /*repeat from .handsontable (inherit doesn't work with IE<8) */
-    font-size: 13px;
-    -webkit-box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.4);
-    resize: none;
-
-    /*below are needed to overwrite stuff added by jQuery UI Bootstrap theme*/
-    display: inline-block;
-    font-size: 13px;
-    color: #000;
-    border-radius: 0;
-  }
-
-  .handsontableInputHolder {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 1px;
-  }
-
-  /*
-  TextRenderer readOnly cell
-  */
-  .handsontable .htDimmed {
-    font-style: italic;
-    color: #777;
-  }
-
-  /*
-  AutocompleteRenderer down arrow
-  */
-  .handsontable .htAutocomplete {
-    position: relative;
-    padding-right: 20px;
-  }
-
-  .handsontable .htAutocompleteArrow {
-    position: absolute;
-    top: 0;
-    right: 0;
-    font-size: 10px;
-    color: #EEE;
-    cursor: default;
-    width: 16px;
-    text-align: center;
-  }
-
-  .handsontable td .htAutocompleteArrow:hover {
-    color: #777;
-  }
-
-  /*
-  CheckboxRenderer
-  */
-  .handsontable .htCheckboxRendererInput.noValue {
-    opacity: 0.5;
-  }
-
-  /*
-  NumericRenderer
-  */
-  .handsontable .htNumeric {
-    text-align: right;
-  }
-
-  /* typeahead rules. Needed only if you are using the autocomplete feature */
-  .handsontable .typeahead {
-    position: absolute;
-    font-family: Arial, Helvetica, sans-serif;
-    line-height: 1.3em;
-    font-size: 13px;
-    z-index: 10;
-    top: 100%;
-    left: 0;
-    float: left;
-    display: none;
-    min-width: 160px;
-    padding: 4px 0;
-    margin: 2px 0 0 0;
-    list-style: none;
-    background-color: white;
-    border-color: #CCC;
-    border-color: rgba(0, 0, 0, 0.2);
-    border-style: solid;
-    border-width: 1px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -webkit-background-clip: padding-box;
-    background-clip: padding-box;
-    border-radius: 4px;
-  }
-
-  .handsontable .typeahead li {
-    line-height: 18px;
-    min-height: 18px;
-    display: list-item;
-    margin: 0;
-  }
-
-  .handsontable .typeahead a {
-    display: block;
-    padding: 3px 15px;
-    clear: both;
-    font-weight: normal;
-    line-height: 18px;
-    min-height: 18px;
-    color: #333;
-    white-space: nowrap;
-  }
-
-  .handsontable .typeahead li > a:hover,
-  .handsontable .typeahead .active > a,
-  .handsontable .typeahead .active > a:hover {
-    color: white;
-    text-decoration: none;
-    background-color: #08C;
-  }
-
-  .handsontable .typeahead a {
-    color: #08C;
-    text-decoration: none;
-  }
-
-  /*context menu rules*/
-  ul.context-menu-list {
-    color: black;
-  }
-
-  ul.context-menu-list li {
-    margin-bottom: 0; /*Foundation framework fix*/
+  @media only screen and (max-width: 680px) {
+    .alertify,
+    .alertify-logs {
+      width: 90%;
+      -webkit-box-sizing: border-box;
+         -moz-box-sizing: border-box;
+              box-sizing: border-box;
+    }
+    .alertify {
+      left: 5%;
+      margin: 0;
+    }
   }
 
   /**
-   * dragdealer
+   * Default Look and Feel
    */
-
-  .handsontable .dragdealer {
-    position: relative;
-    width: 9px;
-    height: 9px;
-    background: #F8F8F8;
-    border: 1px solid #DDD;
+  .alertify,
+  .alertify-log {
+    font-family: "Open Sans", Arial, sans-serif;
   }
-
-  .handsontable .dragdealer .handle {
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    background: #C5C5C5;
+  .alertify {
+    background: #FFF;
+    border: 10px solid #333; /* browsers that don't support rgba */
+    border: 10px solid rgba(0,0,0,.7);
+    border-radius: 8px;
+    box-shadow: 0 3px 3px rgba(0,0,0,.3);
+    -webkit-background-clip: padding;     /* Safari 4? Chrome 6? */
+       -moz-background-clip: padding;     /* Firefox 3.6 */
+            background-clip: padding-box; /* Firefox 4, Safari 5, Opera 10, IE 9 */
   }
-
-  .handsontable .dragdealer .disabled {
-    background: #898989;
-  }
-  /*!
-   * jQuery contextMenu - Plugin for simple contextMenu handling
-   *
-   * Version: 1.6.5
-   *
-   * Authors: Rodney Rehm, Addy Osmani (patches for FF)
-   * Web: http://medialize.github.com/jQuery-contextMenu/
-   *
-   * Licensed under
-   *   MIT License http://www.opensource.org/licenses/mit-license
-   *   GPL v3 http://opensource.org/licenses/GPL-3.0
-   *
-   */
-
-  .context-menu-list {
-      margin:0; 
-      padding:0;
-      
-      min-width: 120px;
-      max-width: 250px;
-      display: inline-block;
-      position: absolute;
-      list-style-type: none;
-      
-      border: 1px solid #DDD;
-      background: #EEE;
-      
-      -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-         -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-          -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-           -o-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-      
-      font-family: Verdana, Arial, Helvetica, sans-serif;
-      font-size: 11px;
-  }
-
-  .context-menu-item {
-      padding: 2px 2px 2px 24px;
-      background-color: #EEE;
+    .alertify-text {
+      border: 1px solid #CCC;
+      padding: 10px;
+      border-radius: 3px;
+    }
+    .alertify-button {
+      border-radius: 3px;
+      color: #FFF;
+      font-weight: bold;
+      padding: 6px 15px;
+      text-decoration: none;
+      text-shadow: 1px 1px 0 rgba(0,0,0,.5);
+      box-shadow: inset 0 1px 0 0 rgba(255,255,255,.5);
+      background-image: -webkit-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+      background-image:    -moz-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+      background-image:     -ms-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+      background-image:      -o-linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+      background-image:         linear-gradient(top, rgba(255,255,255,.3), rgba(255,255,255,0));
+    }
+    .alertify-button:hover,
+    .alertify-button:focus {
+      outline: none;
+      background-image: -webkit-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+      background-image:    -moz-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+      background-image:     -ms-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+      background-image:      -o-linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+      background-image:         linear-gradient(top, rgba(0,0,0,.1), rgba(0,0,0,0));
+    }
+    .alertify-button:focus {
+      box-shadow: 0 0 15px #2B72D5;
+    }
+    .alertify-button:active {
       position: relative;
-      -webkit-user-select: none;
-         -moz-user-select: -moz-none;
-          -ms-user-select: none;
-              user-select: none;
-  }
+      box-shadow: inset 0 2px 3px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+    }
+      .alertify-button-cancel,
+      .alertify-button-cancel:hover,
+      .alertify-button-cancel:focus {
+        background-color: #FE1A00;
+        border: 1px solid #D83526;
+      }
+      .alertify-button-ok,
+      .alertify-button-ok:hover,
+      .alertify-button-ok:focus {
+        background-color: #5CB811;
+        border: 1px solid #3B7808;
+      }
 
-  .context-menu-separator {
-      padding-bottom:0;
-      border-bottom: 1px solid #DDD;
+  .alertify-log {
+    text-align: center;
+    background: #1F1F1F;
+    background: rgba(0,0,0,.9);
+    padding: 15px;
+    border-radius: 3px;
+    color: #FFF;
   }
-
-  .context-menu-item > label > input,
-  .context-menu-item > label > textarea {
-      -webkit-user-select: text;
-         -moz-user-select: text;
-          -ms-user-select: text;
-              user-select: text;
-  }
-
-  .context-menu-item.hover {
-      cursor: pointer;
-      background-color: #39F;
-  }
-
-  .context-menu-item.disabled {
-      color: #666;
-  }
-
-  .context-menu-input.hover,
-  .context-menu-item.disabled.hover {
-      cursor: default;
-      background-color: #EEE;
-  }
-
-  .context-menu-submenu:after {
-      content: ">";
-      color: #666;
-      position: absolute;
-      top: 0;
-      right: 3px;
-      z-index: 1;
-  }
-
-  /* icons
-      #protip:
-      In case you want to use sprites for icons (which I would suggest you do) have a look at
-      http://css-tricks.com/13224-pseudo-spriting/ to get an idea of how to implement 
-      .context-menu-item.icon:before {}
-   */
-  .context-menu-item.icon { min-height: 18px; background-repeat: no-repeat; background-position: 4px 2px; }
-  .context-menu-item.icon-edit { background-image: url(images/page_white_edit.png); }
-  .context-menu-item.icon-cut { background-image: url(images/cut.png); }
-  .context-menu-item.icon-copy { background-image: url(images/page_white_copy.png); }
-  .context-menu-item.icon-paste { background-image: url(images/page_white_paste.png); }
-  .context-menu-item.icon-delete { background-image: url(images/page_white_delete.png); }
-  .context-menu-item.icon-add { background-image: url(images/page_white_add.png); }
-  .context-menu-item.icon-quit { background-image: url(images/door.png); }
-
-  /* vertically align inside labels */
-  .context-menu-input > label > * { vertical-align: top; }
-
-  /* position checkboxes and radios as icons */
-  .context-menu-input > label > input[type="checkbox"],
-  .context-menu-input > label > input[type="radio"] {
-      margin-left: -17px;
-  }
-  .context-menu-input > label > span {
-      margin-left: 5px;
-  }
-
-  .context-menu-input > label,
-  .context-menu-input > label > input[type="text"],
-  .context-menu-input > label > textarea,
-  .context-menu-input > label > select {
-      display: block;
-      width: 100%;
-      
-      -webkit-box-sizing: border-box;
-         -moz-box-sizing: border-box;
-          -ms-box-sizing: border-box;
-           -o-box-sizing: border-box;
-              box-sizing: border-box;
-  }
-
-  .context-menu-input > label > textarea {
-      height: 100px;
-  }
-  .context-menu-item > .context-menu-list {
-      display: none;
-      /* re-positioned by js */
-      right: -5px;
-      top: 5px;
-  }
-
-  .context-menu-item.hover > .context-menu-list {
-      display: block;
-  }
-
-  .context-menu-accesskey {
-      text-decoration: underline;
-  }
+    .alertify-log-error {
+      background: #FE1A00;
+      background: rgba(254,26,0,.9);
+    }
+    .alertify-log-success {
+      background: #50a793;
+      background: rgba(80, 167, 147, 0.9);
+    }  

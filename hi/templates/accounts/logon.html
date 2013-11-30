@@ -1,0 +1,12 @@
+<div class="row">	
+	<label class="block-label">Bem-vindo</label>
+	<form id="form-logon" class="form-flex inset" method="post" action="/accounts/logon/" enctype="multipart/form-data" autocomplete="off">		
+		{% csrf_token %}	
+		<input id="username" class="input-text" name="username" type="text" placeholder="Nome de usuário">
+		<input id="password" class="input-text" name="password" type="password" placeholder="Senha">
+		<div class="form-actions">
+			<button data-post="#form-logon" class="btn btn-block">Entrar</button>
+			<button class="btn small btn-block" data-get="/accounts/create/" data-target="#container">Cadastre-se</button>
+		</div>
+	</form>		
+</div>

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}
+	Login
+{% endblock %}
+
+{% block header %}
+	<header class="action-bar row clearfix">
+		<a class="app-icon action">
+			<i class="icon-location-target"></i>
+		</a>
+		<h2 class="title">Hi <span class="subtitle">Meet new people.</span></h2>
+		<ul class="actions pull-right">
+			<li class="spinner-item">
+				<a href="javascript: void(0);" class="action" title="Registrar-se">
+					<i class="icon-add-person"></i>
+				</a>
+			</li>
+		</ul>
+	</header>
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block container %}
+	<div id="container">
+		<div class="row clearfix">	
+			<form class="inset" role="form" method=post action="/login" autocomplete="off">
+				{% for field in form %}
+					{{ field.label(class_="block-label") }}		
+					{{ field(class_="input-text") }}			
+				{% endfor %}
+				<div class="form-actions">
+					<input type="submit" class="btn btn-block" value="Entrar">
+				</div>
+			</form>
+		</div>
+	</div>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
+
+{% block js %}
+{% endblock %}

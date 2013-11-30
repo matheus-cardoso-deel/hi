@@ -8,4 +8,4 @@
 # @desc: 
 # ----------------------------------
 
-pip install -r app/requeriments/dev.txt
+pip install -r requeriments.txt

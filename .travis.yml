@@ -1,8 +1,14 @@
 language: python
 python:
   - "2.7"
+env:
+  -DJANGO=1.5.2 DB=postgres
 # command to install dependencies
 install:
   - ./development.sh
+  - ./init.sh
 # command to run tests
 script: python app/tests/test_models.py
+
+after_success: coveralls
+

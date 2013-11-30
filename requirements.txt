@@ -1,0 +1,14 @@
+Django==1.5.2
+PyYAML==3.10
+South==0.8.2
+Unipath==1.0
+coverage==3.7
+coveralls==0.3
+django-grappelli==2.4.6
+django-hstore==1.1.1
+docopt==0.6.1
+psycopg2==2.5.1
+requests==2.0.1
+setproctitle==1.1.8
+sh==1.09
+wsgiref==0.1.2

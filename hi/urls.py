@@ -9,8 +9,10 @@ admin.autodiscover()
 
 
 urlpatterns = patterns('',
-	url(r'^$', RedirectView.as_view(url='/mobile/')),
+	url(r'^$', RedirectView.as_view(url='/accounts/logon/')),
 	url(r'^mobile/', include('hi.apps.mobile.urls', app_name='mobile'), name='mobile'),
+	url(r'^accounts/', include('hi.apps.accounts.urls', app_name='accounts'), name='accounts'),
+
 
 	url(r'^grappelli/', include('grappelli.urls')),
 

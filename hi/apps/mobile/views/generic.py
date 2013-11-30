@@ -13,6 +13,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader
 from django.template.loader import render_to_string
 from django.views.generic import View
+from django.core.urlresolvers import resolve
 
 #
 # Dumps and loads JSON
@@ -164,28 +165,31 @@ class GenericView(View):
 				return render_to_response(self.get_template_name(request), template_data, context_instance=RequestContext(request))
 
 	def get_template_name(self, request):
-		page_name = request.resolver_match.url_name
-
-		if request.is_ajax():
-
-			path = 'mobile/' + page_name + '/ajax/'
-		else:
-			path = 'mobile/' + page_name + '/nonajax/'
+		page_name = str(request.resolver_match.url_name) + '/'
+		app_name = str(request.resolver_match.app_name) + '/'		
 
 		try:
 			slug = str(self.kwargs['slug'])
 
-			path = path + slug + '.html'
+			if app_name == page_name:
+				page_name = ''
+
+			if request.is_ajax():
+
+				path = app_name + page_name + slug + '.html'
+			else:
+				path = app_name + page_name + 'nonajax/' + slug + '.html'
 
 			print path
+
 			try:
 				template = loader.get_template(path)
 
 				return path
 			except:
-				return 'mobile/404.html'
+				return '404.html'
 		except:
-			return 'mobile/404.html'
+			return '404.html'
 
 #
 # Pages
@@ -193,51 +197,7 @@ class GenericView(View):
 
 @login_required
 def home(request):
+	print '>>>>>>>>>>'
 	data = {}
 
-	return render_to_response('mobile/home.html', data, context_instance=RequestContext(request))
-
-def register(request):
-	data = {}
-	
-	if request.is_ajax():
-		return render_to_json(request, 'mobile/ajax/register.html', data)
-	else:
-		return render_to_response('mobile/nonajax/register.html', data, context_instance=RequestContext(request))
-
-def logon(request):
-
-	if request.user.is_authenticated():
-		return HttpResponseRedirect('/mobile/index/')
-	elif request.POST: 
-		if 'username' in request.POST and request.POST['username']:
-			username = request.POST['username']
-		if 'password' in request.POST and request.POST['password']:
-			password = request.POST['password']
-
-		if username != None and password != None:
-			authenticated_user = authenticate(username=username, password=password)
-
-			if authenticated_user is not None:
-				if authenticated_user.is_active:
-					login(request, authenticated_user)
-
-					return index(request)
-				else:
-					return initial(request)
-			else:
-				return initial(request)
-		else:
-			return initial(request)
-	else:  
-		data = {}
-		
-		if request.is_ajax():
-			return render_to_json(request, 'mobile/ajax/logon.html', None)
-		else:
-			return render_to_response('mobile/nonajax/logon.html', data, context_instance=RequestContext(request))
-		
-def logoff(request):
-    logout(request)
-
-    return HttpResponseRedirect('/mobile/')
+	return render_to_json(request, 'mobile/home.html', data)

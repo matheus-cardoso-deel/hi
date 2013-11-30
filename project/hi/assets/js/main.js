@@ -116,7 +116,22 @@ function add_marker(map, myLocation, title, id, icon_url){
 
 /* [GLOBAL] Calls 
 *******************************************************************/
+	$(document).on('click', 'button[data-get]', function(e){
+		e.preventDefault();
 
+		el = $(this);
+		href = el.attr('data-get');
+
+		$.get(href, function(data){
+			if (data['template']){
+				if(el.attr('data-target')){
+					target = $(el.attr('data-target'));
+
+					target.html(data['template']);
+				}
+			}
+		})
+	})
 
 
 /*  [LOCAL] Calls - <Model>

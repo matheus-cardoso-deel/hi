@@ -13,7 +13,10 @@ urlpatterns = patterns('',
 	url(r'^logon', 'hi.apps.mobile.views.generic.logon', name='logon',),
 	url(r'^logoff', 'hi.apps.mobile.views.generic.logoff', name='logoff',),
 	
+	url(r'^home', 'hi.apps.mobile.views.generic.home', name='home',),
+	url(r'^register', 'hi.apps.mobile.views.generic.register', name='register',),
+
 	# home
-	url(r'^home/(?P<slug>\w+)/$', login_required(home.HomeView.as_view()), name='home',),
-	url(r'^home/(?P<slug>\w+)/(?P<key>\d+)/$', login_required(home.HomeView.as_view()), name='home',),
+	# url(r'^home/(?P<slug>\w+)/$', login_required(home.HomeView.as_view()), name='home',),
+	# url(r'^home/(?P<slug>\w+)/(?P<key>\d+)/$', login_required(home.HomeView.as_view()), name='home',),
 )

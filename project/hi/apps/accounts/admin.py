@@ -41,8 +41,6 @@ class CustomUserAdmin(admin.ModelAdmin):
                 'fields': (
                     'full_name', 
                     'short_name', 
-                    'role',
-                    'businesses',
                 )
             }
         ),
@@ -75,7 +73,6 @@ class CustomUserAdmin(admin.ModelAdmin):
                     'password1', 
                     'password2',
                     'email',
-                    'cpf',
                 )
             }
         ),

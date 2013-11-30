@@ -15,7 +15,6 @@ def create_admin(app, created_models, verbosity, **kwargs):
 	
 	username = 'admin'
 	password = 'admin'
-	cpf = '00000000000'
 	email = 'admin@hi.com.br'
 	full_name = 'Administrador'
 	short_name = 'Administrador'
@@ -32,7 +31,6 @@ def create_admin(app, created_models, verbosity, **kwargs):
 			username=username, 
 			password=password, 
 			email=email, 
-			cpf=cpf, 
 			full_name=full_name, 
 			short_name=short_name,
 		)

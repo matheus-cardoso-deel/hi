@@ -6,6 +6,7 @@ env:
 # command to install dependencies
 install:
   - ./development.sh
+  - pip install coveralls
 # command to run tests
 script: coverage run app/tests/test_models.py
 

@@ -1,3 +1,6 @@
+require 'coveralls'
+Coveralls.wear!
+
 import unittest
  
 class SimpleestCase(unittest.TestCase):

@@ -1,7 +1,5 @@
-require 'coveralls'
-Coveralls.wear!
-
 import unittest
+#import coveralls
  
 class SimpleestCase(unittest.TestCase):
 	def test_index(self):

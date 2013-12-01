@@ -7,7 +7,7 @@ env:
 install:
   - ./development.sh
 # command to run tests
-script: python app/tests/test_models.py
+script: coverage run app/tests/test_models.py
 
 after_success: coveralls
 

@@ -11,12 +11,12 @@
 #echo "[>] Installing python-setuptools (apt-get install python-setuptools)."
 sudo apt-get install python-setuptools
 
-#sudo apt-get install python-pip
+sudo apt-get install python-pip
 
 # echo "[>] Installing aptitude (apt-get install python-aptitude)."
 # sudo apt-get install aptitude
 
-#sudo apt-get install libpq-dev python-dev
+sudo apt-get install libpq-dev python-dev
 
 #echo "[>] Installing PostgreSQL v9.3"
 sudo apt-get install postgresql-9.3 postgresql-contrib-9.3
